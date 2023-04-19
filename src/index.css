@@ -1,0 +1,101 @@
+:root {
+    font-family: Helvetica, Arial, sans-serif;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #1b1b1b;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.elevator {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.row {
+    display: flex;
+    place-items: center;
+    gap: 10px;
+}
+
+.callButtons {
+    display: flex;
+    flex-direction: column;
+}
+.callButtons button {
+    background-color: transparent;
+    width: 20px;
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+    border: none;
+    color: rgb(148, 148, 148);
+    cursor: pointer;
+}
+.callButtons button:hover {
+    color: #fff;
+}
+.callButtons button:disabled {
+    color: rgb(70, 70, 70);
+    cursor: not-allowed;
+}
+.callButtons button.active {
+    color: rgb(219, 142, 53);
+}
+
+.floor {
+    background-color: rgb(70, 70, 70);
+    width: 90px;
+    height: 90px;
+    border-radius: 5px;
+}
+.floor.active {
+    background-color: rgb(93, 130, 211);
+}
+.floor span {
+    position: relative;
+    top: 30px;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.floorButtons {
+    float: right;
+    display: flex;
+    flex-direction: column;
+    margin-top: 3px;
+    margin-right: 3px;
+}
+.floorButtons button {
+    background-color: rgb(148, 148, 148);
+    width: 15px;
+    padding: 0;
+    margin: 0;
+    font-size: 11px;
+    border: 1px solid #000;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.floorButtons button:hover {
+    color: #fff;
+}
+.floorButtons button:disabled {
+    color: rgb(70, 70, 70);
+    cursor: not-allowed;
+}
+.floorButtons button.active {
+    color: rgb(219, 142, 53);
+}
