@@ -14,7 +14,6 @@ type Action =
 type State = {
     totalFloors: number
     currentFloor: number
-    floorToMoveTo?: number
     pendingFloors: {
         direction: "up" | "down"
         floor: number
@@ -33,7 +32,7 @@ function elevatorReducer(state: State, action: Action): State {
         // call the elevator to a floor
         case "call": {
             const pendingFloors = [...state.pendingFloors]
-            // if the floor is not already in the queue, add it
+            // if the floor is not already in the queue, add it to the queue
             if (!pendingFloors.find(p => p.floor === action.floor && p.direction === action.direction))
                 pendingFloors.push({
                     direction: action.direction,
@@ -46,9 +45,11 @@ function elevatorReducer(state: State, action: Action): State {
         }
         // move the elevator to a floor
         case "move": {
+            const pendingFloors = state.pendingFloors.filter(p => p.floor !== action.moveTo)
             return {
                 ...state,
-                floorToMoveTo: action.moveTo,
+                currentFloor: action.moveTo,
+                pendingFloors,
             }
         }
     }

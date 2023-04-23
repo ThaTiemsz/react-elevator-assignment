@@ -29,13 +29,15 @@ export default function Floor({ number }: FloorProps) {
     }
 
     useEffect(() => {
-        state.pendingFloors.filter(p => p.floor === number).map(p => {
-            if (p.direction === "up") {
-                setUpButtonCalled(true)
-            } else {
-                setDownButtonCalled(true)
-            }
-        })
+        setUpButtonCalled(state.pendingFloors.find(p => p.floor === number && p.direction === "up") ? true : false)
+        setDownButtonCalled(state.pendingFloors.find(p => p.floor === number && p.direction === "down") ? true : false)
+        // state.pendingFloors.filter(p => p.floor === number).map(p => {
+        //     if (p.direction === "up") {
+        //         setUpButtonCalled(true)
+        //     } else {
+        //         setDownButtonCalled(true)
+        //     }
+        // })
     }, [state.pendingFloors])
 
     return (
