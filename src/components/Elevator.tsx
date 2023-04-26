@@ -17,33 +17,38 @@ export default function Elevator({ numOfFloors }: ElevatorProps) {
         floors.push(<Floor key={i} number={i} />)
     }
 
+
     // TODO: prioritise most call with same direction
-    // useEffect(() => {
-    //     if (state.pendingFloors.length > 0) {
-    //         for (let i = 0; i >= state.currentFloor; i--) {
-    //             if (state.pendingFloors.find(p => p.floor === i))
-    //                 break
-    //             setTimeout(() => {
-    //                 dispatch({
-    //                     type: "move",
-    //                     moveTo: i,
-    //                 })
-    //             }, 1000)
-    //         }
-    //         // const intervalId = setTimeout(() => {
-    //         //     console.log(state)
-    //         //     if (state?.pendingFloors.length > 0) {
-    //         //         const sortedNextFloors = [...state.pendingFloors].sort((a, b) => b.floor - a.floor)
-    //         //         const floorToMoveTo = sortedNextFloors[0].floor
-    //         //         dispatch({
-    //         //             type: "move",
-    //         //             moveTo: floorToMoveTo,
-    //         //         })
-    //         //     }
-    //         // }, 1000)
-    //         // return () => clearTimeout(intervalId)
-    //     }
-    // }, [state.pendingFloors])
+    useEffect(() => {
+        if (state.pendingFloors.length > 0) {
+            const upFloors = state.pendingFloors
+                .filter(p => p.direction === "up")
+                .sort((a, b) => b.floor - a.floor)
+            const downFloors = state.pendingFloors
+                .filter(p => p.direction === "down")
+                .sort((a, b) => a.floor - b.floor)
+            const nextFloor = upFloors.length > downFloors.length ? upFloors[0].floor : downFloors[0].floor
+            const shouldMoveUp = nextFloor > state.currentFloor
+            setTimeout(() => {
+                dispatch({
+                    type: "move",
+                    moveTo: nextFloor,
+                })
+            }, 1000)
+            // const intervalId = setTimeout(() => {
+            //     console.log(state)
+            //     if (state?.pendingFloors.length > 0) {
+            //         const sortedNextFloors = [...state.pendingFloors].sort((a, b) => b.floor - a.floor)
+            //         const floorToMoveTo = sortedNextFloors[0].floor
+            //         dispatch({
+            //             type: "move",
+            //             moveTo: floorToMoveTo,
+            //         })
+            //     }
+            // }, 1000)
+            // return () => clearTimeout(intervalId)
+        }
+    }, [state.pendingFloors])
 
     return (
         <div className="elevator">
