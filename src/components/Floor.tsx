@@ -12,6 +12,7 @@ export default function Floor({ number }: FloorProps) {
     const [downButtonCalled, setDownButtonCalled] = useState(false)
 
     const floorButtons = []
+    // no need to show floor buttons if the elevator is on the floor
     if (state.currentFloor === number) {
         for (let i = state.totalFloors; i >= 0; i--) {
             const floorIsPending = state.pendingFloors.find(p => p.floor === i)

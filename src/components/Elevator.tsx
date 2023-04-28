@@ -4,9 +4,10 @@ import Floor from "./Floor"
 
 interface ElevatorProps {
     numOfFloors: number
+    moveTime: number
 }
 
-export default function Elevator({ numOfFloors }: ElevatorProps) {
+export default function Elevator({ numOfFloors, moveTime }: ElevatorProps) {
     const state = useElevator()
     const dispatch = useElevatorDispatch()
 
@@ -15,18 +16,19 @@ export default function Elevator({ numOfFloors }: ElevatorProps) {
         floors.push(<Floor key={i} number={i} />)
     }
 
-    // move elevator to next floor, prioritising the direction with the most pending floors
+    // move elevator to the next floor
     useEffect(() => {
         if (state.pendingFloors.length > 0) {
-            const upFloors = state.pendingFloors
-                .filter(p => p.direction === "up")
-                .sort((a, b) => b.floor - a.floor)
-            const downFloors = state.pendingFloors
-                .filter(p => p.direction === "down")
-                .sort((a, b) => a.floor - b.floor)
+            // find the closest pending floor
+            const closestPendingFloor = state.pendingFloors
+                .reduce((prev, curr) =>
+                    Math.abs(curr.floor - state.currentFloor) < Math.abs(prev.floor - state.currentFloor)
+                        ? curr
+                        : prev
+                )
 
             // the number of the next floor to go to
-            const nextFloor = upFloors.length > downFloors.length
+            const nextFloor = closestPendingFloor.floor > state.currentFloor
                 ? state.currentFloor + 1
                 : state.currentFloor - 1
 
@@ -39,7 +41,7 @@ export default function Elevator({ numOfFloors }: ElevatorProps) {
                     type: "move",
                     moveTo: nextFloor,
                 })
-            }, 1000)
+            }, moveTime)
         }
     }, [state.pendingFloors])
 
