@@ -1,12 +1,10 @@
 import { useEffect } from "react"
-import { ElevatorProvider, useElevator, useElevatorDispatch } from "../contexts/ElevatorContext"
+import { useElevator, useElevatorDispatch } from "../contexts/ElevatorContext"
 import Floor from "./Floor"
 
 interface ElevatorProps {
     numOfFloors: number
 }
-
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export default function Elevator({ numOfFloors }: ElevatorProps) {
     const state = useElevator()
@@ -17,8 +15,7 @@ export default function Elevator({ numOfFloors }: ElevatorProps) {
         floors.push(<Floor key={i} number={i} />)
     }
 
-
-    // TODO: prioritise most call with same direction
+    // move elevator to next floor, prioritising the direction with the most pending floors
     useEffect(() => {
         if (state.pendingFloors.length > 0) {
             const upFloors = state.pendingFloors
@@ -27,26 +24,22 @@ export default function Elevator({ numOfFloors }: ElevatorProps) {
             const downFloors = state.pendingFloors
                 .filter(p => p.direction === "down")
                 .sort((a, b) => a.floor - b.floor)
-            const nextFloor = upFloors.length > downFloors.length ? upFloors[0].floor : downFloors[0].floor
-            const shouldMoveUp = nextFloor > state.currentFloor
+
+            // the number of the next floor to go to
+            const nextFloor = upFloors.length > downFloors.length
+                ? state.currentFloor + 1
+                : state.currentFloor - 1
+
+            // elevator can't move to a floor that doesn't exist
+            if (nextFloor > state.totalFloors || nextFloor < 0)
+                return
+
             setTimeout(() => {
                 dispatch({
                     type: "move",
                     moveTo: nextFloor,
                 })
             }, 1000)
-            // const intervalId = setTimeout(() => {
-            //     console.log(state)
-            //     if (state?.pendingFloors.length > 0) {
-            //         const sortedNextFloors = [...state.pendingFloors].sort((a, b) => b.floor - a.floor)
-            //         const floorToMoveTo = sortedNextFloors[0].floor
-            //         dispatch({
-            //             type: "move",
-            //             moveTo: floorToMoveTo,
-            //         })
-            //     }
-            // }, 1000)
-            // return () => clearTimeout(intervalId)
         }
     }, [state.pendingFloors])
 

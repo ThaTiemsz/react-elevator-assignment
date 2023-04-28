@@ -97,5 +97,6 @@ body {
     cursor: not-allowed;
 }
 .floorButtons button.active {
-    color: rgb(219, 142, 53);
+    background-color: rgb(219, 142, 53);
+    color: #000;
 }

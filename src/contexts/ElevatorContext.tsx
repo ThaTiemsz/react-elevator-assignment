@@ -7,6 +7,10 @@ type Action =
         floor: number
     }
     | {
+        type: "floorButtonPress"
+        floor: number
+    }
+    | {
         type: "move"
         moveTo: number
     }
@@ -38,6 +42,22 @@ function elevatorReducer(state: State, action: Action): State {
                     direction: action.direction,
                     floor: action.floor,
                 })
+            return {
+                ...state,
+                pendingFloors,
+            }
+        }
+        // push a floor button inside the elevator
+        case "floorButtonPress": {
+            const pendingFloors = [...state.pendingFloors]
+            const direction = action.floor > state.currentFloor ? "up" : "down"
+            // if the floor is not already in the queue, add it to the queue
+            if (!pendingFloors.find(p => p.floor === action.floor && p.direction === direction)) {
+                pendingFloors.push({
+                    direction,
+                    floor: action.floor,
+                })
+            }
             return {
                 ...state,
                 pendingFloors,
